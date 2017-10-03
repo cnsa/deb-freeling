@@ -1,4 +1,4 @@
-FROM buildpack-deps:stretch-scm
+FROM buildpack-deps:stretch-curl
 MAINTAINER Alexander Merkulov <sasha@merqlove.ru>
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -35,17 +35,19 @@ RUN apt-get install -qqy automake autoconf libtool make checkinstall g++ swig \
 
 # Install Freeling
 WORKDIR /tmp
-RUN git clone --depth 1 --single-branch --branch $VERSION git@github.com:TALP-UPC/FreeLing.git && \
-    cd FreeLing && \
-    git checkout tags/$VERSION && \
-    rm -rf ./.git/*
-ENV FREELING_ARCHIVE "FreeLing"
+ENV ARCHIVE "FreeLing-$VERSION.tar.gz"
+ENV ARCHIVE_DIR "FreeLing-$VERSION"
+ADD ./packages/$ARCHIVE ./
+# RUN curl -o ./$ARCHIVE -L https://github.com/TALP-UPC/FreeLing/releases/download/$VERSION/$ARCHIVE && \
+# RUN tar -xzf $ARCHIVE && \
+RUN cd $ARCHIVE_DIR
 
-WORKDIR /tmp/$FREELING_ARCHIVE
+WORKDIR /tmp/$ARCHIVE_DIR
 
 RUN autoreconf --install && \
     ./configure --prefix=/usr
 
-RUN apt-get autoremove -y && \
+RUN rm -f /tmp/$ARCHIVE && \
+    apt-get autoremove -y && \
     apt-get clean -y && \
     apt-get purge
