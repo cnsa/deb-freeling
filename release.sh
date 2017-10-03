@@ -44,6 +44,7 @@ FN="$PROJECT""_$VERSION-1_$ARCH.deb"
 
 docker rm -f $DATA_C 2>/dev/null || true
 docker create -v $REL_DIR \
+              -v /packages \
               --name $DATA_C busybox /bin/true
 docker build -t $B_I .
 docker run --volumes-from $DATA_C --rm -t $B_I sh -c "rm -rf $DATA_LANG_RM && \
