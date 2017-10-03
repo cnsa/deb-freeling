@@ -18,37 +18,26 @@ LIBICU_DEP="$LIBICU.0"
 
 REQUIRES="libstdc++6 \(\>=4.6.3\),libgcc1 \(\>=4.6.3\),libc6 \(\>=2.13\),zlib1g \(\>=1.2.3\),libboost-program-options$LIBBOOST_DEP \(\>=$LIBBOOST\),libboost-regex$LIBBOOST_DEP \(\>=$LIBBOOST\),libboost-filesystem$LIBBOOST_DEP \(\>=$LIBBOOST\),libboost-system$LIBBOOST_DEP \(\>=$LIBBOOST\),libicu$LIBICU \(\>=$LIBICU_DEP\),zlib1g \(\>=1.2.3.4\)"
 
-FREELING_SHARE="data"
+function data_rm_paths() {
+  FREELING_SHARE="$1"
+  echo "$FREELING_SHARE/as \
+      $FREELING_SHARE/ca \
+      $FREELING_SHARE/cs \
+      $FREELING_SHARE/cy \
+      $FREELING_SHARE/de \
+      $FREELING_SHARE/es \
+      $FREELING_SHARE/fr \
+      $FREELING_SHARE/gl \
+      $FREELING_SHARE/hr \
+      $FREELING_SHARE/nb \
+      $FREELING_SHARE/it \
+      $FREELING_SHARE/pt \
+      $FREELING_SHARE/sl"
+}
 
-DATA_LANG_RM="$FREELING_SHARE/as \
-    $FREELING_SHARE/ca \
-    $FREELING_SHARE/cs \
-    $FREELING_SHARE/cy \
-    $FREELING_SHARE/de \
-    $FREELING_SHARE/es \
-    $FREELING_SHARE/fr \
-    $FREELING_SHARE/gl \
-    $FREELING_SHARE/hr \
-    $FREELING_SHARE/nb \
-    $FREELING_SHARE/it \
-    $FREELING_SHARE/pt \
-    $FREELING_SHARE/sl"
-
-FREELING_SHARE="/usr/share/freeling"
-
-DATA_LANG_RM_INST="$FREELING_SHARE/as \
-    $FREELING_SHARE/ca \
-    $FREELING_SHARE/cs \
-    $FREELING_SHARE/cy \
-    $FREELING_SHARE/de \
-    $FREELING_SHARE/es \
-    $FREELING_SHARE/fr \
-    $FREELING_SHARE/gl \
-    $FREELING_SHARE/hr \
-    $FREELING_SHARE/nb \
-    $FREELING_SHARE/it \
-    $FREELING_SHARE/pt \
-    $FREELING_SHARE/sl"
+DATA_LANG_RM=$(data_rm_paths "data")
+DATA_LANG_RM_INST=$(data_rm_paths "/usr/share/freeling")
+DATA_LANG_ALL="$DATA_LANG_RM\ $DATA_LANG_RM_INST"
 
 ARCH="amd64"
 FN="$PROJECT""_$VERSION-1_$ARCH.deb"
@@ -60,8 +49,7 @@ docker build -t $B_I .
 docker run --volumes-from $DATA_C --rm -t $B_I sh -c "rm -rf $DATA_LANG_RM && \
     make && \ 
     make install && \ 
-    rm -rf $DATA_LANG_RM && \
-    rm -rf $DATA_LANG_RM_INST && \
+    rm -rf $DATA_LANG_ALL && \
     checkinstall -y \
       --pkgsource="https://github.com/TALP-UPC/FreeLing/" \
       --pkglicense="GPL" \
@@ -72,7 +60,7 @@ docker run --volumes-from $DATA_C --rm -t $B_I sh -c "rm -rf $DATA_LANG_RM && \
       --addso \
       --maintainer="Alexander Merkulov\\<api@cnsa.ru\\>" \
       --pkgname=freeling \
-      --exclude="$DATA_LANG_RM_INST" \
+      --exclude="$DATA_LANG_ALL" \
       --provides="$PROVIDES" \
       --requires="$REQUIRES" && \    
       mv *.deb $REL_DIR/"
