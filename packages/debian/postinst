@@ -1,0 +1,7 @@
+#! /bin/sh
+
+cd /usr/lib/
+ln -fs libfreeling-4.0.so libfreeling.so
+ln -fs libfoma-0.9.18.so libfoma.so
+ln -fs libtreeler-0.4.so libtreeler.so
+ldconfig

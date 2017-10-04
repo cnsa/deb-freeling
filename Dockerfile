@@ -27,19 +27,19 @@ ENV BUILD_DEV libicu-dev libboost-regex-dev libboost-system-dev \
                    zlib1g-dev
 
 # Freeling Deps
-RUN apt-get install -qqy automake autoconf libtool make checkinstall g++ swig \
+RUN apt-get install -qqy automake autoconf libtool ruby ruby-dev rubygems make checkinstall g++ swig \
                        libicu$LIBICU libboost-regex$LIBBOOST_DEP \
                        libboost-system$LIBBOOST_DEP libboost-program-options$LIBBOOST_DEP \
                        libboost-thread$LIBBOOST_DEP libboost-filesystem$LIBBOOST_DEP && \
-    apt-get install -qqy $BUILD_DEV
+    apt-get install -qqy $BUILD_DEV && \
+    gem install --no-ri --no-rdoc fpm
 
 # Install Freeling
 WORKDIR /tmp
 ENV ARCHIVE "FreeLing-$VERSION.tar.gz"
 ENV ARCHIVE_DIR "FreeLing-$VERSION"
 ADD ./packages/$ARCHIVE ./
-# RUN curl -o ./$ARCHIVE -L https://github.com/TALP-UPC/FreeLing/releases/download/$VERSION/$ARCHIVE && \
-# RUN tar -xzf $ARCHIVE && \
+ADD ./packages/debian $ARCHIVE_DIR/debian
 RUN cd $ARCHIVE_DIR
 
 WORKDIR /tmp/$ARCHIVE_DIR

@@ -1,3 +1,4 @@
 releases
 .DS_Store
-packages
+packages/*
+!packages/debian
