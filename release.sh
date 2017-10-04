@@ -12,15 +12,15 @@ FPM="fpm --epoch 1 \
 -m 'NSA Ltd. <api@cnsa.ru>' \
 --description 'FreeLing is a tool' \
 --license 'GPL' \
---uri 'https://github.com/TALP-UPC/FreeLing/' \
+--url 'https://github.com/TALP-UPC/FreeLing/' \
 --post-install $APP_DIR/debian/postinst \
 --post-uninstall $APP_DIR/debian/postrm \
 --pre-uninstall $APP_DIR/debian/prerm \
---provides freeling \
---provides libfreeling \
+--provides $PROJECT \
+--provides lib$PROJECT \
 --provides libtreeler \
 --provides libfoma \
--v '4.0' \
+-v '$VERSION' \
 -t deb \
 -d 'libstdc++6 (>=4.6.3)' \
 -d 'libgcc1 (>=4.6.3)' \
@@ -32,7 +32,7 @@ FPM="fpm --epoch 1 \
 -d 'libboost-system$LIBBOOST_DEP (>=$LIBBOOST)' \
 -d 'libicu$LIBICU (>=$LIBICU_DEP)' \
 -d 'zlib1g (>=1.2.3.4)' \
--n freeling"
+-n $PROJECT"
 
 docker create -v $REL_DIR \
               --name $DATA_C busybox /bin/true
