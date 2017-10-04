@@ -1,9 +1,21 @@
 VERSION?=latest
 
-all: release
+all: clean download release check copy clean clean_image
 
 download:
-	curl -o ./packages/FreeLing-4.0.tar.gz -L https://github.com/TALP-UPC/FreeLing/releases/download/4.0/FreeLing-4.0.tar.gz
+	./download.sh
 
 release:
 	./release.sh
+
+copy:
+	./copy.sh
+
+check:
+	./check.sh
+
+clean:
+	./clean.sh
+
+clean_image:
+	./clean_image.sh
